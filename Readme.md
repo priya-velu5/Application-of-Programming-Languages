@@ -1,3 +1,15 @@
+## Week 3:
+
+
+### Nine
+`
+g++ Week3/Nine.cpp -o w9.out
+`
+
+`
+./Week3/w9.out pride-and-prejudice.txt
+`
+
 ## To run Week 2:
 
 For Four, Five and Seven (change file name accordingly):
