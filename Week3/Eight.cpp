@@ -5,13 +5,14 @@
 #include <regex>
 #include <set>
 #include <vector>
+#include <sstream>
 
 using namespace std;
 
 set<string> stopWords;
 vector<string> tokens;
 map<string, int> wordFreq;
-vector<pair<string, int>> sortedFreq;
+vector<pair<string, int> > sortedFreq;
 
 /*
 This program uses a recursive approach to sort the word-frequency pairs
@@ -83,42 +84,36 @@ void countFreq() {
   }
 }
 
-bool sortByVal(const pair<string, int> &a, const pair<string, int> &b) {
-  return (a.second > b.second);
+// Function to find the index of the maximum element (based on pair's second value)
+int findMaxIndex(const vector<pair<string, int> >& arr, int start) {
+    int maxIndex = start;
+    for (int i = start + 1; i < arr.size(); i++) {
+        if (arr[i].second > arr[maxIndex].second) {  // Compare by second element
+            maxIndex = i;
+        }
+    }
+    return maxIndex;
 }
 
-// Return minimum index
-int minIndex(int a[], int i, int j)
-{
-    if (i == j)
-        return i;
- 
-    // Find minimum of remaining elements
-    int k = minIndex(a, i + 1, j);
- 
-    // Return minimum of current and remaining.
-    return (a[i] < a[k])? i : k;
+// Recursive function for selection sort on vector<pair<string, int> >
+void selectionSort(vector<pair<string, int> >& arr, int start) {
+    // Base case: if we have reached the end of the vector
+    if (start >= arr.size() - 1) {
+        return;
+    }
+
+    // Find the maximum element in the unsorted portion of the array
+    int maxIndex = findMaxIndex(arr, start);
+
+    // Swap the found maximum element with the current start element
+    if (maxIndex != start) {
+        swap(arr[start], arr[maxIndex]);
+    }
+
+    // Recursively sort the remaining portion of the array
+    selectionSort(arr, start + 1);
 }
- 
-// Recursive selection sort. n is size of a[] and index
-// is index of starting element.
-void recurSelectionSort(int a[], int n, int index = 0)
-{
-    // Return when starting and size are same
-    if (index == n)
-       return;
- 
-    // calling minimum index function for minimum index
-    int k = minIndex(a, index, n-1);
- 
-    // Swapping when index and minimum index are not same
-    if (k != index)
-       swap(a[k], a[index]);
- 
-    // Recursively calling selection sort function
-    recurSelectionSort(a, n, index + 1);
-}
- 
+
 void sortFreq() {
 
   // copy key-value pairs from the map to the vector
@@ -127,9 +122,8 @@ void sortFreq() {
     sortedFreq.push_back(make_pair(it->first, it->second));
   }
 
-  sort(sortedFreq.begin(), sortedFreq.end(), sortByVal);
+  selectionSort(sortedFreq, 0);
 }
-
 
 void printTopFreq() {
 
@@ -139,8 +133,13 @@ void printTopFreq() {
 }
 
 int main(int argc, char *argv[]) {
+  if (argc < 2) {
+        cout << "Usage: " << argv[0] << " <text_file>" << endl;
+        return 1;
+    }
+    string textFile = argv[1];
   loadStopWords("stop_words.txt");
-  tokenize("pride-and-prejudice.txt");
+  tokenize(textFile);
   countFreq();
   sortFreq();
   printTopFreq();
