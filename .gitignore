@@ -32,3 +32,7 @@
 *.app
 
 .vscode/c_cpp_properties.json
+*.replit
+*.DS_Store
+Makefile
+*.nix
