@@ -1,3 +1,24 @@
+## Week 4
+
+### Fifteen
+
+This repl has Boost installed for event management handling in cpp. If the forked repo doesn't have it installed, please go to Dependencies->System Dependencies-> Add "boost184"
+
+`g++ Week4/Fifteen.cpp -o Week4/w15.out`
+
+`./Week4/w15.out pride-and-prejudice.txt`
+
+### Thirteen
+
+`node Week4/thirteen.js pride-and-prejudice.txt`
+
+
+### Twelve
+`g++ Week4/Twelve.cpp -o Week4/w12.out`
+
+`./Week4/w12.out pride-and-prejudice.txt`
+
+
 ## Week 3:
 
 
