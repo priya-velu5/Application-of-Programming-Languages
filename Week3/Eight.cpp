@@ -137,7 +137,7 @@ int main(int argc, char *argv[]) {
         cout << "Usage: " << argv[0] << " <text_file>" << endl;
         return 1;
     }
-    string textFile = argv[1];
+  string textFile = argv[1];
   loadStopWords("stop_words.txt");
   tokenize(textFile);
   countFreq();

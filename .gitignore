@@ -31,8 +31,10 @@
 *.out
 *.app
 
-.vscode/c_cpp_properties.json
+# Vscode and replit files
 *.replit
 *.DS_Store
 Makefile
 *.nix
+*.json
+
