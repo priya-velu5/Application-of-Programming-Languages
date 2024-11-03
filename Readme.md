@@ -1,3 +1,25 @@
+## Week 5
+
+### TwentyOne
+
+`g++ Week5/TwentyOne.cpp -0 w21.out`
+
+` ./Week5/w21.out pride-and-prejudice.txt`
+
+### TwentyTwo
+`g++ Week5/TwentyTwo.cpp -0 w22.out`
+
+` ./Week5/w22.out pride-and-prejudice.txt`
+
+
+### TwentyFive
+
+`cd Week5`
+
+`javac TwentyFive.java`
+
+`java TwentyFive ../pride-and-prejudice.txt`
+
 ## Week 4
 
 ### Fifteen
