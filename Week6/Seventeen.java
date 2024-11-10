@@ -1,4 +1,7 @@
+// This code was modified from https://github.com/crista/exercises-in-programming-style/blob/master/11-things/tf_10.java
+
 import java.io.*;
+import java.lang.reflect.*;
 import java.util.*;
 
 public class Seventeen {
@@ -6,7 +9,61 @@ public class Seventeen {
      * The main function
      */
     public static void main(String[] args) throws IOException {
+        //prompt users for a class name and call a function that prints all the information about the class using reflection.
+        //no hardcoded conditionals
+        if (args.length == 0) {
+            System.out.println("No file path provided.");
+            return;
+        }
+        
+        System.out.println("Enter a class to inspect: ");
+        Scanner in =  new Scanner(System.in);
+        String name = in.nextLine();
+        System.out.println("Getting information about " + name);
+        
+        Class getInfo = null;
+        try{
+            getInfo = Class.forName(name);
+        } catch (ClassNotFoundException e) {
+            System.out.println("Class not found.");
+            return;
+        }
+        if (getInfo !=null){
+            // get interfaces
+            Class[] interfaces = getInfo.getInterfaces();
+            for (Class iface: interfaces)
+                    System.out.println("Interface name: " + iface.getName());
+            // get superclass
+            Class superclass = getInfo.getSuperclass();
+            if (superclass != null) {
+                System.out.println("Superclass name: " + superclass.getName());
+            }
+            // get methods
+            Method[] methods = getInfo.getDeclaredMethods();
+            for (Method m: methods){
+                System.out.println("Method name: \t"+m);
+                System.out.println("Method return type : \t"+m.getReturnType());
+                System.out.println("Method parameter count: \t"+m.getParameterCount());
+                System.out.println();
+                Parameter[] parameters = m.getParameters();
+                for(Parameter parameter : parameters) {
+                    System.out.println("Method's Parameter : "+parameter);
+                }
+                System.out.println();
+                }
+
+            // get fields
+            Field[] fields = getInfo.getDeclaredFields();
+            for (Field field : fields) {
+                System.out.println("Field name: " + field.getName());
+                System.out.println("Field type: " + field.getType());
+                System.out.println("Field modifiers: " + Modifier.toString(field.getModifiers()));
+                System.out.println();
+            }
+        }
+        
         new WordFrequencyController(args[0]).run();
+
     }
 }
 
@@ -24,7 +81,7 @@ class WordFrequencyController extends TFExercise {
     private DataStorageManager storageManager;
     private StopWordManager stopWordManager;
     private WordFrequencyManager wordFreqManager;
-
+    
     public WordFrequencyController(String pathToFile) throws IOException {
         this.storageManager = new DataStorageManager(pathToFile);
         this.stopWordManager = new StopWordManager();
@@ -32,21 +89,42 @@ class WordFrequencyController extends TFExercise {
     }
 
     public void run() {
-        for (String word : this.storageManager.getWords()) {
-            if (!this.stopWordManager.isStopWord(word)) {
-                this.wordFreqManager.incrementCount(word);
+        // invoke the methods of the DataStorageManager, 
+        // StopWordManager, and WordFrequencyCounter objects using reflection.
+        
+        Method getword;
+        Method isStop;
+        Method increment;
+        try {
+            getword = storageManager.getClass().getMethod("getWords");
+            List<String> words = (List<String>) getword.invoke(storageManager);
+            isStop = stopWordManager.getClass().getMethod("isStopWord", String.class); 
+            increment = wordFreqManager.getClass().getMethod("incrementCount", String.class);
+            
+            for (String word : words) {
+                boolean isStopWord = (boolean) isStop.invoke(stopWordManager, word);
+                if (!isStopWord) {
+                    increment.invoke(wordFreqManager ,word);
+                }
             }
-        }
 
-        int numWordsPrinted = 0;
-        for (WordFrequencyPair pair : this.wordFreqManager.sorted()) {
-            System.out.println(pair.getWord() + " - " + pair.getFrequency());
+            Method sortedMethod = wordFreqManager.getClass().getMethod("sorted");
+            List<WordFrequencyPair> sortedWords = (List<WordFrequencyPair>) sortedMethod.invoke(wordFreqManager);
 
-            numWordsPrinted++;
-            if (numWordsPrinted >= 25) {
-                break;
+            int numWordsPrinted = 0;
+            for (WordFrequencyPair pair : sortedWords) {
+                System.out.println(pair.getWord() + " - " + pair.getFrequency());
+                
+                numWordsPrinted++;
+                if (numWordsPrinted >= 25) {
+                    break;
+                }
             }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    
     }
 }
 
