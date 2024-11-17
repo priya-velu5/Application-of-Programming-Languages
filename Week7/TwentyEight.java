@@ -69,7 +69,6 @@ public class TwentyEight {
         };
     }
 
-    // Iterator for counting and sorting word frequencies
     public static Iterator<Map.Entry<String, Integer>> countAndSortIterator(String filename, Set<String> stopWords) throws IOException {
         Iterator<String> nonStopWordIterator = nonStopWordsIterator(filename, stopWords);
         Map<String, Integer> wordFreqs = new HashMap<>();
@@ -89,7 +88,7 @@ public class TwentyEight {
                             sortedEntries.sort(Map.Entry.<String, Integer>comparingByValue().reversed());
                             currentBatch = sortedEntries.iterator();
                         }
-                        return currentBatch.hasNext();
+                        return false;
                     }
     
                     // Process the next word
@@ -99,14 +98,15 @@ public class TwentyEight {
     
                     // Emit sorted entries after every 5000 words
                     if (wordCount[0] % 5000 == 0) {
-                        // Sort and emit the current batch
+                        // Sort and print the top 25 words after every 5000 words processed
                         sortedEntries = new ArrayList<>(wordFreqs.entrySet());
                         sortedEntries.sort(Map.Entry.<String, Integer>comparingByValue().reversed());
-                        currentBatch = sortedEntries.iterator();
-                        currentBatch = Collections.emptyIterator();
+                        printTop25(sortedEntries); // Print top 25 after each batch
+                        currentBatch = sortedEntries.iterator(); // Prepare the batch for next iteration
                     }
+                    
                 }
-                return currentBatch.hasNext() || nonStopWordIterator.hasNext();
+                return currentBatch.hasNext();
             }
     
             @Override
@@ -115,6 +115,18 @@ public class TwentyEight {
                     return currentBatch.next();
                 }
                 throw new NoSuchElementException();
+            }
+    
+            // Helper method to print the top 25 word frequencies
+            private void printTop25(List<Map.Entry<String, Integer>> sortedEntries) {
+                System.out.println("Top 25 words so far:");
+                int count = 0;
+                for (Map.Entry<String, Integer> entry : sortedEntries) {
+                    System.out.println(entry.getKey() + " - " + entry.getValue());
+                    count++;
+                    if (count >= 25) break;
+                }
+                System.out.println("-----------------------------");
             }
         };
     }
@@ -134,19 +146,17 @@ public class TwentyEight {
             // Load stop words into a Set (comma-separated)
             String stopWordsContent = new String(Files.readAllBytes(Paths.get(stopWordsFile)));
             Set<String> stopWords = new HashSet<>(Arrays.asList(stopWordsContent.split(",")));
-
-            // Get the sorted word-frequency pairs
+    
+            // Get the sorted word-frequency pairs and process them
             Iterator<Map.Entry<String, Integer>> sortedWordFreqs = countAndSortIterator(inputFile, stopWords);
-
-            // Print top 25 words from the final output
-            System.out.println("-----------------------------");
-            int count = 0;
-            while (sortedWordFreqs.hasNext() && count < 25) {
+    
+            // Print the word frequencies as they are processed in batches
+            
+            while (sortedWordFreqs.hasNext()) {
                 Map.Entry<String, Integer> entry = sortedWordFreqs.next();
-                System.out.println(entry.getKey() + " - " + entry.getValue());
-                count++;
+    
             }
-
+    
         } catch (IOException e) {
             System.err.println("Error processing files: " + e.getMessage());
         }
