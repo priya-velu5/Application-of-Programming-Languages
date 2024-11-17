@@ -37,4 +37,10 @@
 Makefile
 *.nix
 *.json
+*.replit
+.vscode
+*.vscode
+*.vscode-remote
+*.ccls-cache*
+*.class
 
