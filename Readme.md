@@ -1,3 +1,18 @@
+## Week 7
+
+`cd Week7`
+
+### TwentySeven
+
+`g++ TwentySeven.cpp -o w27.out`
+
+`./w27.out ../pride-and-prejudice.txt`
+ 
+### TwentyEight 
+`javac TwentyEight.java`
+
+`java TwentyEight.java ../pride-and-prejudice.txt`
+
  ## Week 6
 
  ### Twenty
