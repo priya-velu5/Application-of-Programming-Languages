@@ -1,3 +1,25 @@
+## Week 8
+
+`cd Week8`
+
+### TwentyNine
+
+`javac -d . *.java`
+
+`java TwentyNine.java ../pride-and-prejudice.txt`
+
+### Thirty 
+
+`javac Thirty.java`
+
+`java Thirty.java ../pride-and-prejudice.txt`
+
+### ThirtyTwo
+
+`javac ThirtyTwo.java`
+
+`java ThirtyTwo.java ../pride-and-prejudice.txt`
+
 ## Week 7
 
 `cd Week7`
