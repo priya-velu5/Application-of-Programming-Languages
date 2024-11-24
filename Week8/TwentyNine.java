@@ -32,10 +32,10 @@ public class TwentyNine {
         wfController.postMessage(Arrays.asList("run", storageManager));
         
         // Send "die" messages to all objects
-        wordFreqManager.postMessage(Arrays.asList("die"));
-        stopWordManager.postMessage(Arrays.asList("die"));
-        storageManager.postMessage(Arrays.asList("die"));
-        wfController.postMessage(Arrays.asList("die"));
+        // wordFreqManager.postMessage(Arrays.asList("die"));
+        // stopWordManager.postMessage(Arrays.asList("die"));
+        // storageManager.postMessage(Arrays.asList("die"));
+        
 
         // Wait for objects to finish
         wordFreqManager.joinObject();
@@ -95,6 +95,10 @@ class DataStorageManager extends ActiveWFObject {
             init((String) message.get(1), (StopWordManager) message.get(2));
         } else if ("send_word_freqs".equals(command)) {
             sendWords((WordFrequencyController) message.get(1));
+        }else if ("die".equals(command)) {
+            // Stop this actor and notify StopWordManager to stop
+            stopObject();
+            stopWordManager.postMessage(Arrays.asList("die"));
         }
     }
 
@@ -129,6 +133,10 @@ class StopWordManager extends ActiveWFObject {
             filter((String) message.get(1), (WordFrequencyController) message.get(2));
         } else if ("top25".equals(command)) {
             wordFrequencyManager.postMessage(message);
+        } else if ("die".equals(command)) {
+            // Stop this actor and notify WordFrequencyManager to stop
+            stopObject();
+            wordFrequencyManager.postMessage(Arrays.asList("die"));
         }
     }
 
@@ -162,6 +170,9 @@ class WordFrequencyManager extends ActiveWFObject {
             incrementCount((String) message.get(1));
         } else if ("top25".equals(command)) {
             sendTop25((WordFrequencyController) message.get(1));
+        } else if ("die".equals(command)) {
+            // Stop this actor
+            stopObject();
         }
     }
 
