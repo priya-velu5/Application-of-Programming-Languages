@@ -1,7 +1,6 @@
 import sys, string
 import numpy as np
 
-
 leet_dict = {
     'A': '4',
     'B': '8',

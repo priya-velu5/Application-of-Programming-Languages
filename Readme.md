@@ -1,3 +1,12 @@
+## Week 9 
+
+`pip install numpy==1.26.3`
+Some function I used has been deprecated, so install numpy v1
+
+`cd Week9`
+
+`python arrays.py ../pride-and-prejudice.txt`
+
 ## Week 8
 
 `cd Week8`
